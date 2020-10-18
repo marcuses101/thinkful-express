@@ -1,7 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
-const {cipher} = require('./cipher.js')
+const { cipher } = require("./cipher.js");
+const { lotto } = require("./lotto.js");
 
 app.use(morgan("dev"));
 
@@ -13,26 +14,33 @@ app.get("/echo", (req, res) => {
   Base URL: ${req.baseUrl}
   Host: ${req.hostname}
   Path: ${req.path}`;
-  res.send(responseText)
+  res.send(responseText);
 });
 
-app.get("/queryViewer", (req,res)=>{
+app.get("/queryViewer", (req, res) => {
   console.log(req.query);
   res.end();
-})
+});
 
-app.get("/sum",(req,res)=>{
-  const {a,b} = req.query;
-  const responseString = `The sum of a and b is ${parseInt(a) + parseInt(b)}`
+app.get("/sum", (req, res) => {
+  const { a, b } = req.query;
+  const responseString = `The sum of a and b is ${parseInt(a) + parseInt(b)}`;
   res.send(responseString);
-})
+});
 
-app.get("/cipher", (req,res)=>{
-  console.log(req.query)
-  const {text, shift} = req.query;
-  const encryptedText = cipher(text,parseInt(shift))
-  res.send(encryptedText)
-})
+app.get("/cipher", (req, res) => {
+  console.log(req.query);
+  const { text, shift } = req.query;
+  const encryptedText = cipher(text, parseInt(shift));
+  res.send(encryptedText);
+});
+
+app.get("/lotto", (req, res) => {
+  const { arr } = req.query;
+  console.log(arr)
+  const numberArray = arr.map((entry) => parseInt(entry));
+  res.send(lotto(numberArray));
+});
 
 app.listen(8000, () => {
   console.log("Listening on port 8000");
